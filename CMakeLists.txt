@@ -17,8 +17,63 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     CXX_EXTENSIONS NO
 )
 
+set(OpenSSL ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/OpenSSL/build)
+
 if(MSVC)
     add_compile_options(/W4 /WX)
+
+    if (${CMAKE_SIZEOF_VOID_P} STREQUAL "8")
+        message("Config for MSVC x64")
+
+        #===============================================================================================================
+        # Include OpenSSL for x64
+        #===============================================================================================================
+
+        target_include_directories(${PROJECT_NAME} PRIVATE ${OpenSSL}/x64/Release/include/)
+
+        add_library(libeay32 STATIC IMPORTED GLOBAL)
+        set_target_properties(libeay32 PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${OpenSSL}/x64/Release/include/"
+            IMPORTED_LOCATION "${OpenSSL}/x64/Release/lib/libeay32.lib"
+        )
+        target_link_libraries(${PROJECT_NAME} PRIVATE libeay32)
+
+        add_library(ssleay32 STATIC IMPORTED GLOBAL)
+        set_target_properties(ssleay32 PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${OpenSSL}/x64/Release/include/"
+            IMPORTED_LOCATION "${OpenSSL}/x64/Release/lib/ssleay32.lib"
+        )
+        target_link_libraries(${PROJECT_NAME} PRIVATE ssleay32)
+
+        #===============================================================================================================
+
+    endif()
+    if (${CMAKE_SIZEOF_VOID_P} STREQUAL "4")
+        message("Config for MSVC x86")
+
+        #===============================================================================================================
+        # Include OpenSSL for x86
+        #===============================================================================================================
+
+        target_include_directories(${PROJECT_NAME} PRIVATE ${OpenSSL}/x86/Release/include/)
+
+        add_library(libeay32 STATIC IMPORTED GLOBAL)
+        set_target_properties(libeay32 PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${OpenSSL}/x86/Release/include/"
+            IMPORTED_LOCATION "${OpenSSL}/x86/Release/lib/libeay32.lib"
+        )
+        target_link_libraries(${PROJECT_NAME} PRIVATE libeay32)
+
+        add_library(ssleay32 STATIC IMPORTED GLOBAL)
+        set_target_properties(ssleay32 PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${OpenSSL}/x86/Release/include/"
+            IMPORTED_LOCATION "${OpenSSL}/x86/Release/lib/ssleay32.lib"
+        )
+        target_link_libraries(${PROJECT_NAME} PRIVATE ssleay32)
+
+        #===============================================================================================================
+
+    endif()
 else()
     add_compile_options(-Wall -Wextra - pedantic -Werror)
 endif()
