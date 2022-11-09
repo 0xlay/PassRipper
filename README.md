@@ -6,6 +6,7 @@ App for password brute force
 * Visual Studio 2019 and high
 * CMake 3.20 and high
 * OpenSSL 1.0.2 and high
+* GoogleTest
 
 ### Install the OpenSSL lib
 1. Run the Visual Studio Developer Command Prompt for target platform (x86 or x64) </br>
