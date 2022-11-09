@@ -1,12 +1,15 @@
 cmake_minimum_required(VERSION 3.20)
 project(PassRipper VERSION 1.0.0.0 LANGUAGES CXX C)
 
+set(PROJECT_ROOT_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+set(OpenSSL ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/OpenSSL/build)
+
 set(INCLUDE
 
 )
 
 set(SOURCE
-    src/main.cpp
+    Source/main.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE} ${INCLUDE})
@@ -16,8 +19,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
 )
-
-set(OpenSSL ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/OpenSSL/build)
 
 if(MSVC)
     add_compile_options(/W4 /WX)
@@ -77,3 +78,13 @@ if(MSVC)
 else()
     add_compile_options(-Wall -Wextra - pedantic -Werror)
 endif()
+
+enable_testing()
+
+add_subdirectory(
+    "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/GoogleTest/"
+)
+
+add_subdirectory(
+    "${CMAKE_CURRENT_SOURCE_DIR}/Tests/"
+)
