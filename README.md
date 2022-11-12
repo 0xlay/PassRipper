@@ -1,12 +1,17 @@
 # PassRipper
-App for password brute force
+The PassRipper is a simple program for cracking password to file.</br> 
+### DISCLAIMER!!! You can use this program only for cracking your personal files!
 
 # Build in Windows
 ### Dependencies for build
 * Visual Studio 2019 and high
 * CMake 3.20 and high
 * OpenSSL 1.0.2 and high
-* GoogleTest
+* JSON (Nlohmann) 3.11.2 and high
+* GoogleTest (optional)
+
+### Clone repository (with submodules)
+```git clone --recursive https://github.com/0xlay/PassRipper.git```
 
 ### Install the OpenSSL lib
 1. Run the Visual Studio Developer Command Prompt for target platform (x86 or x64) </br>
