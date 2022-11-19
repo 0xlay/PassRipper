@@ -6,6 +6,7 @@ set(INCLUDE
 )
 
 set(SOURCE
+    PasswordTest.cpp
     SampleTest.cpp
 )
 
