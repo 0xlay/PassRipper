@@ -5,11 +5,14 @@ set(PROJECT_ROOT_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 set(OpenSSL ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/OpenSSL/build)
 
 set(INCLUDE
-
+    Source/Core/Password.h
+    Source/Core/Password/Config.h
+    Source/Core/Password/Generate.h
 )
 
 set(SOURCE
     Source/main.cpp
+    Source/Core/Password/Generate.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE} ${INCLUDE})
