@@ -97,7 +97,7 @@ namespace Core::Password
         {
             if (!NextSpin(config.alphabet, spinners, spinCounters))
                 break;
-            passwords[it] = spinners;
+            passwords[it] = spinners.c_str();
         }
 
         return passwords;
