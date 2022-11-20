@@ -8,11 +8,16 @@ set(INCLUDE
     Source/Core/Password.h
     Source/Core/Password/Config.h
     Source/Core/Password/Generate.h
+    Source/Crypto/Cipher.h
+    Source/Crypto/Cipher/ICipher.h
+    Source/Crypto/Cipher/AES_128_CBC.h
 )
 
 set(SOURCE
     Source/main.cpp
     Source/Core/Password/Generate.cpp
+    Source/Crypto/Cipher.cpp
+    Source/Crypto/Cipher/AES_128_CBC.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE} ${INCLUDE})

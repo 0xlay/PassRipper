@@ -7,7 +7,7 @@ set(INCLUDE
 
 set(SOURCE
     PasswordTest.cpp
-    SampleTest.cpp
+    CryptoCipherTest.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE} ${INCLUDE})
@@ -28,14 +28,37 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     CXX_EXTENSIONS NO
 )
 
-if (MSVC)
-    target_compile_options(
-        ${PROJECT_NAME} PRIVATE
-        /W4 /WX
-    )
-else ()
-    target_compile_options(
-        ${PROJECT_NAME} PRIVATE
-        -Wall -Wextra -pedantic -Werror
-    )
+if(MSVC)
+    add_compile_options(/W4 /WX)
+
+    if (${CMAKE_SIZEOF_VOID_P} STREQUAL "8")
+        message("Config for MSVC x64")
+
+        #===============================================================================================================
+        # Include OpenSSL for x64
+        #===============================================================================================================
+
+        target_include_directories(${PROJECT_NAME} PRIVATE ${OpenSSL}/x64/Release/include/)
+        target_link_libraries(${PROJECT_NAME} PRIVATE libeay32)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ssleay32)
+
+        #===============================================================================================================
+
+    endif()
+    if (${CMAKE_SIZEOF_VOID_P} STREQUAL "4")
+        message("Config for MSVC x86")
+
+        #===============================================================================================================
+        # Include OpenSSL for x86
+        #===============================================================================================================
+
+        target_include_directories(${PROJECT_NAME} PRIVATE ${OpenSSL}/x86/Release/include/)
+        target_link_libraries(${PROJECT_NAME} PRIVATE libeay32)
+        target_link_libraries(${PROJECT_NAME} PRIVATE ssleay32)
+
+        #===============================================================================================================
+
+    endif()
+else()
+    add_compile_options(-Wall -Wextra - pedantic -Werror)
 endif()
