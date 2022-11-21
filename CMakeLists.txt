@@ -11,6 +11,9 @@ set(INCLUDE
     Source/Crypto/Cipher.h
     Source/Crypto/Cipher/ICipher.h
     Source/Crypto/Cipher/AES_128_CBC.h
+    Source/Crypto/Hash.h
+    Source/Crypto/Hash/IHash.h
+    Source/Crypto/Hash/SHA256.h
 )
 
 set(SOURCE
@@ -18,6 +21,8 @@ set(SOURCE
     Source/Core/Password/Generate.cpp
     Source/Crypto/Cipher.cpp
     Source/Crypto/Cipher/AES_128_CBC.cpp
+    Source/Crypto/Hash.cpp
+    Source/Crypto/Hash/SHA256.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE} ${INCLUDE})
