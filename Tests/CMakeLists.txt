@@ -8,6 +8,7 @@ set(INCLUDE
 set(SOURCE
     PasswordTest.cpp
     CryptoCipherTest.cpp
+    CryptoHashTest.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE} ${INCLUDE})
