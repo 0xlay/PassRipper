@@ -103,4 +103,10 @@ namespace Core::Password
         return passwords;
     }
 
+
+    std::size_t calculateAttempts(std::size_t alphabetSize, std::size_t passwordLength) noexcept
+    {
+        return static_cast<std::size_t>((std::pow(alphabetSize, passwordLength + 1) - 1) / (alphabetSize - 1) - 1);
+    }
+
 } // Core::Password

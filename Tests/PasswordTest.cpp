@@ -68,6 +68,16 @@ TEST(PssswordTest, GeneratePasswordForNumericAlphabet)
 }
 
 
+TEST(PssswordTest, CalculateAttemptsForBrutePassword)
+{
+    constexpr std::size_t kTarget = 11'110;
+
+    std::size_t attempts = Core::Password::calculateAttempts(sizeof(Core::Password::kNumericAlphabet) - 1, 4);
+
+    ASSERT_EQ(attempts, kTarget);
+}
+
+
 bool operator==(std::vector<std::string> const& lhs, std::vector<std::string> const& rhs)
 {
     bool status = true;

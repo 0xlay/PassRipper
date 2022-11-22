@@ -5,6 +5,9 @@ set(PROJECT_ROOT_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 set(OpenSSL ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/OpenSSL/build)
 
 set(INCLUDE
+    Source/Core/Bruteforce.h
+    Source/Core/Bruteforce/Config.h
+    Source/Core/Bruteforce/Engine.h
     Source/Core/Password.h
     Source/Core/Password/Config.h
     Source/Core/Password/Generate.h
@@ -18,6 +21,7 @@ set(INCLUDE
 
 set(SOURCE
     Source/main.cpp
+    Source/Core/Bruteforce/Engine.cpp
     Source/Core/Password/Generate.cpp
     Source/Crypto/Cipher.cpp
     Source/Crypto/Cipher/AES_128_CBC.cpp
@@ -32,6 +36,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS NO
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_ROOT_SOURCE_DIRECTORY}/Source)
 
 if(MSVC)
     add_compile_options(/W4 /WX)
