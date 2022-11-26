@@ -9,6 +9,8 @@ set(SOURCE
     PasswordTest.cpp
     CryptoCipherTest.cpp
     CryptoHashTest.cpp
+    BruteforceTest.cpp
+    UtilityStringTest.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE} ${INCLUDE})
