@@ -50,4 +50,10 @@ namespace Crypto
         return m_cipher->decrypt(cipherText, plainText);
     }
 
+
+    void Cipher::resetPassword(std::string_view password) noexcept
+    {
+        m_cipher->resetPassword(password);
+    }
+
 } // Crypto

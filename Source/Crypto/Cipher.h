@@ -41,8 +41,11 @@ namespace Crypto
     {
     public:
         explicit Cipher(std::unique_ptr<ICipher> cipher);
+
         [[nodiscard]] bool encrypt(std::string_view plainText, std::string& cipherText);
         [[nodiscard]] bool decrypt(std::string_view cipherText, std::string& plainText);
+
+        void resetPassword(std::string_view password) noexcept;
 
     private:
         std::unique_ptr<ICipher> m_cipher;

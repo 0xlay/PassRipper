@@ -39,16 +39,7 @@ namespace Crypto
     AES_128_CBC::AES_128_CBC(std::string_view password)
         : m_ctx(nullptr), m_textSizeAfterUpdate(0), m_isInitialized(false)
     {
-        m_key.resize(EVP_MAX_KEY_LENGTH);
-        m_key.resize(EVP_MAX_IV_LENGTH);
-
-        m_isInitialized = EVP_BytesToKey(
-            EVP_aes_128_cbc(), EVP_md5(), nullptr,
-            reinterpret_cast<const std::uint8_t*>(password.data()), password.size(),
-            kIterationCount,
-            reinterpret_cast<std::uint8_t*>(m_key.data()), reinterpret_cast<std::uint8_t*>(m_iv.data())
-        );
-
+        resetPassword(password);
         if (m_isInitialized)
         {
             m_ctx = EVP_CIPHER_CTX_new();
@@ -143,6 +134,20 @@ namespace Crypto
         }
 
         return status;
+    }
+
+
+    void AES_128_CBC::resetPassword(std::string_view password) noexcept
+    {
+        m_key.resize(EVP_MAX_KEY_LENGTH);
+        m_key.resize(EVP_MAX_IV_LENGTH);
+
+        m_isInitialized = EVP_BytesToKey(
+                EVP_aes_128_cbc(), EVP_md5(), nullptr,
+                reinterpret_cast<const std::uint8_t*>(password.data()), static_cast<int>(password.size()),
+                kIterationCount,
+                reinterpret_cast<std::uint8_t*>(m_key.data()), reinterpret_cast<std::uint8_t*>(m_iv.data())
+        );
     }
 
 

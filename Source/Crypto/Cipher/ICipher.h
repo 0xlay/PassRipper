@@ -40,6 +40,7 @@ namespace Crypto
         virtual ~ICipher() noexcept = default;
         virtual bool encrypt(std::string_view plainText, std::string& cipherText) noexcept = 0;
         virtual bool decrypt(std::string_view cipherText, std::string& plainText) noexcept = 0;
+        virtual void resetPassword(std::string_view password) noexcept = 0;
     };
 
 } // Crypto

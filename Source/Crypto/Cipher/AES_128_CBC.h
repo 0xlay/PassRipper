@@ -50,6 +50,8 @@ namespace Crypto
         [[nodiscard]] bool encrypt(std::string_view plainText, std::string &cipherText) noexcept override;
         [[nodiscard]] bool decrypt(std::string_view cipherText, std::string &plainText) noexcept override;
 
+        void resetPassword(std::string_view password) noexcept override;
+
     private:
         [[nodiscard]] bool encryptInit();
         [[nodiscard]] bool encryptUpdate(std::string_view plainText, std::string &cipherText);
