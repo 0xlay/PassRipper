@@ -86,6 +86,7 @@ namespace Crypto
         if (m_isInitialized)
         {
             SHA256_Final(hash.data(), m_ctx.get());
+            m_isInitialized = SHA256_Init(m_ctx.get());
         }
 
         return hash;
