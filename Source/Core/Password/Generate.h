@@ -38,6 +38,6 @@ namespace Core::Password
 
     [[nodiscard]] std::vector<std::string> Generate(Config const& config);
 
-    [[nodiscard]] std::size_t calculateAttempts(std::size_t alphabetSize, std::size_t passwordLength) noexcept;
+    [[nodiscard]] std::size_t CalculateAttempts(std::size_t alphabetSize, std::size_t passwordLength) noexcept;
 
 } // Core::Password

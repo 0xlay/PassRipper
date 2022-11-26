@@ -72,7 +72,7 @@ TEST(PssswordTest, CalculateAttemptsForBrutePassword)
 {
     constexpr std::size_t kTarget = 11'110;
 
-    std::size_t attempts = Core::Password::calculateAttempts(sizeof(Core::Password::kNumericAlphabet) - 1, 4);
+    std::size_t attempts = Core::Password::CalculateAttempts(sizeof(Core::Password::kNumericAlphabet) - 1, 4);
 
     ASSERT_EQ(attempts, kTarget);
 }
