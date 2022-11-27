@@ -148,7 +148,7 @@ int main(int argc, char** argv)
     {
         std::cout << "Not enough memory! Standard alloc exception: " << ex.what() << std::endl;
     }
-    catch(std::exception const ex)
+    catch(std::exception const& ex)
     {
         std::cout << "Standard exception: " << ex.what() << std::endl;
     }
