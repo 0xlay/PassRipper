@@ -42,7 +42,7 @@ namespace Core::Bruteforce
 {
 
     Engine::Engine(Config config)
-        : m_config(std::move(config))
+        : m_config(std::move(config)), m_isFound(false)
     {
         if (m_config.threadCount > m_config.passwordLength)
         {
@@ -131,6 +131,11 @@ namespace Core::Bruteforce
 
         for (auto&& password : passwords)
         {
+            if (m_isFound)
+            {
+                break;
+            }
+
             cipher.resetPassword(password);
             std::string decryptedText;
             if (cipher.decrypt(m_encryptedText, decryptedText))
@@ -141,6 +146,7 @@ namespace Core::Bruteforce
                     {
                         m_decryptedText = std::move(decryptedText);
                         m_password = std::move(password);
+                        m_isFound = true;
                         break;
                     }
                 }

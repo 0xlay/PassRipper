@@ -62,6 +62,7 @@ namespace Core::Bruteforce
 
     private:
         Config m_config;
+        bool m_isFound;
         std::string m_encryptedText;
         std::string m_hash;
         std::string m_decryptedText;
