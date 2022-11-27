@@ -30,8 +30,12 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <chrono>
+#include <atomic>
 #include <mutex>
 #include "Config.h"
+
+using namespace std::chrono_literals;
 
 
 namespace Core::Password
@@ -45,6 +49,9 @@ namespace Core::Bruteforce
 
     class Engine final
     {
+        static constexpr std::chrono::duration kProgressBarUpdateInterval = 1s;
+        static constexpr char kTitleSpeed[] = " pass/sec";
+
     public:
         explicit Engine(Config config);
 
@@ -63,6 +70,7 @@ namespace Core::Bruteforce
     private:
         void brute(Core::Password::Config config);
         void savePasswords(std::vector<std::string>::const_iterator begin, std::vector<std::string>::const_iterator end);
+        void progressBar();
 
     private:
         Config m_config;
@@ -72,6 +80,9 @@ namespace Core::Bruteforce
         std::string m_decryptedText;
         std::string m_password;
         std::mutex m_lockerSaveToFile;
+
+        std::size_t m_maxAttempts;
+        std::atomic<std::size_t> m_currentAttempt;
     };
 
 } // Core::Bruteforce

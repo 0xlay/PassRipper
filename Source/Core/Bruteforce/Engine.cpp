@@ -27,6 +27,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#include <iostream>
 #include <memory>
 #include <thread>
 #include <algorithm>
@@ -44,7 +45,8 @@ namespace Core::Bruteforce
 {
 
     Engine::Engine(Config config)
-        : m_config(std::move(config)), m_isFound(false)
+        : m_config(std::move(config)), m_isFound(false),
+          m_maxAttempts(Password::CalculateAttempts(m_config.alphabet.length(), m_config.passwordLength))
     {
         if (m_config.threadCount > m_config.passwordLength)
         {
@@ -79,6 +81,9 @@ namespace Core::Bruteforce
 
                 threads.emplace_back(std::thread(&Engine::brute, this, std::move(config)));
             }
+
+            std::thread threadForProgressBar = std::thread(&Engine::progressBar, this);
+            threadForProgressBar.join();
 
             for (auto&& thread : threads)
             {
@@ -133,6 +138,7 @@ namespace Core::Bruteforce
 
         for (auto it = passwords.begin(); it != passwords.end(); ++it)
         {
+            ++m_currentAttempt;
             if (m_isFound)
             {
                 savePasswords(passwords.begin(), it);
@@ -140,7 +146,7 @@ namespace Core::Bruteforce
             }
 
             cipher.resetPassword(*it);
-            
+
             std::string decryptedText;
             if (cipher.decrypt(m_encryptedText, decryptedText))
             {
@@ -164,9 +170,9 @@ namespace Core::Bruteforce
 
     void Engine::savePasswords(std::vector<std::string>::const_iterator begin, std::vector<std::string>::const_iterator end)
     {
-        std::scoped_lock lock(m_lockerSaveToFile);
         if (!m_config.pathToLogFile.empty())
         {
+            std::scoped_lock lock(m_lockerSaveToFile);
             std::ofstream file(m_config.pathToLogFile, std::ios::app);
             if (file.is_open())
             {
@@ -174,5 +180,37 @@ namespace Core::Bruteforce
             }
         }
     }
+
+
+    void Engine::progressBar()
+    {
+        std::size_t lastAttempt = 0;
+
+        while (!m_isFound)
+        {
+            std::size_t speed = m_currentAttempt - lastAttempt;
+            lastAttempt = m_currentAttempt;
+
+#ifdef __unix__
+            system("clear");
+#elif defined(_WIN32) || defined(_WIN64)
+            system("cls");
+#endif
+            std::cout << m_currentAttempt << " from " << m_maxAttempts << " passwords checked!" << std::endl;
+
+            std::cout << "Time elapsed: ";
+            if (speed != 0)
+            {
+                std::cout << (m_maxAttempts - m_currentAttempt) / speed << " sec" << std::endl;
+            }
+            else
+            {
+                std::cout << "unknown sec" << std::endl;
+            }
+            std::cout << "Speed: " << speed << kTitleSpeed << std::endl;
+            std::this_thread::sleep_for(kProgressBarUpdateInterval);
+        }
+    }
+
 
 } // Core::Bruteforce
