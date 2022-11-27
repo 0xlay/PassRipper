@@ -22,6 +22,7 @@ set(INCLUDE
     Source/Utility/String/Convert.h
     Source/Utility/File.h
     Source/Utility/File/InputOutput.h
+    Source/Crypto/Hash/Utility.h
 )
 
 set(SOURCE
@@ -35,6 +36,7 @@ set(SOURCE
     Source/Utility/String/Compare.cpp
     Source/Utility/String/Convert.cpp
     Source/Utility/File/InputOutput.cpp
+    Source/Crypto/Hash/Utility.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE} ${INCLUDE})
