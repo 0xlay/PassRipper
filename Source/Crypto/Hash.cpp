@@ -32,6 +32,7 @@
 #include <sstream>
 #include "Hash.h"
 #include "Hash/IHash.h"
+#include "Utility/String/Convert.h"
 
 
 namespace Crypto
@@ -57,18 +58,7 @@ namespace Crypto
     std::string Hash::toHexString()
     {
         std::stringstream hashStream;
-        std::vector<std::uint8_t> hashInBytes = m_hash->complete();
-
-        if (!hashInBytes.empty())
-        {
-            hashStream << std::hex << std::setfill('0');
-            for (auto && symbol : hashInBytes)
-            {
-                hashStream << std::setw(2) << static_cast<unsigned>(symbol);
-            }
-        }
-
-        return hashStream.str();
+        return Utility::String::ConvertToHexString(m_hash->complete());
     }
 
 } // Crypto

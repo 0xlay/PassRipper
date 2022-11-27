@@ -3,6 +3,8 @@
 #include "Crypto/Hash.cpp"
 #include "Crypto/Hash/SHA256.h"
 #include "Crypto/Hash/SHA256.cpp"
+#include "Utility/String/Convert.h"
+#include "Utility/String/Convert.cpp"
 
 
 TEST(CryptoHashTest, SHA256SingleIteration)
