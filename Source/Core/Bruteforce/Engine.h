@@ -28,6 +28,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include <vector>
+#include <string>
+#include <mutex>
 #include "Config.h"
 
 
@@ -59,6 +62,7 @@ namespace Core::Bruteforce
 
     private:
         void brute(Core::Password::Config config);
+        void savePasswords(std::vector<std::string>::const_iterator begin, std::vector<std::string>::const_iterator end);
 
     private:
         Config m_config;
@@ -67,6 +71,7 @@ namespace Core::Bruteforce
         std::string m_hash;
         std::string m_decryptedText;
         std::string m_password;
+        std::mutex m_lockerSaveToFile;
     };
 
 } // Core::Bruteforce

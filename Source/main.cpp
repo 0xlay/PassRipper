@@ -35,7 +35,8 @@
 int main(int argc, char** argv)
 {
     static constexpr char kMessageInvalidArguments[] = \
-    "Invalid arguments! Args: X:\\File.txt --alphabet=numerical/lowercase/uppercase/all --password-length=4 --threads=1 [--log-password]";
+    "Invalid arguments! Args: X:\\File.txt --alphabet=numerical/lowercase/uppercase/all --password-length=4 --threads=1"
+    "[--log-password=X:\\Log.txt]";
 
     if (argc < 5)
     {
@@ -70,6 +71,7 @@ int main(int argc, char** argv)
         return -1;
 
     }
+
     std::size_t passwordLength = 0;
     static constexpr char kArgumentPasswordLength[] = "--password-length=";
     if (std::strncmp(argv[3], kArgumentPasswordLength, sizeof(kArgumentPasswordLength) - 1) == 0)
@@ -94,6 +96,16 @@ int main(int argc, char** argv)
         return -1;
     }
 
+    std::string pathToLogFile;
+    static constexpr char kArgumentPathToLogFile[] = "--log-password=";
+    if (argc > 5)
+    {
+        if (std::strncmp(argv[5], kArgumentPathToLogFile, sizeof(kArgumentPathToLogFile) - 1) == 0)
+        {
+            pathToLogFile = std::string(argv[5] + sizeof(kArgumentPathToLogFile) - 1);
+        }
+    }
+
     std::string encryptedFile;
     if (!Utility::File::ReadData(fullPath, encryptedFile))
     {
@@ -106,28 +118,43 @@ int main(int argc, char** argv)
     Core::Bruteforce::Config config {
         .alphabet = std::move(alphabet),
         .passwordLength = passwordLength,
-        .threadCount = threads
+        .threadCount = threads,
+        .pathToLogFile = std::move(pathToLogFile)
     };
+
     Core::Bruteforce::Engine engine(std::move(config));
     engine.setHash(std::move(hash));
     engine.setEncryptedText(std::move(encryptedFile));
-    
-    if (engine.run())
+
+    try
     {
-        std::string decryptedText = engine.fetchDecryptedText();
-        std::cout << "Decrypted text: " << decryptedText << std::endl;
-        if (std::string password = engine.getPassword(); password.empty())
+        if (engine.run())
         {
-            std::cout << "Your password not found!" << std::endl;
+            if (std::string password = engine.getPassword(); password.empty())
+            {
+                std::cout << "Your password not found!" << std::endl;
+            }
+            else
+            {
+                std::cout << "Your password: " << password << std::endl;
+            }
         }
         else
         {
-            std::cout << "Your password: " << password << std::endl;
+            std::cout << "Failed to brute password!" << std::endl;
         }
     }
-    else
+    catch(std::bad_alloc const& ex)
     {
-        std::cout << "Failed to brute password!" << std::endl;
+        std::cout << "Not enough memory! Standard alloc exception: " << ex.what() << std::endl;
+    }
+    catch(std::exception const ex)
+    {
+        std::cout << "Standard exception: " << ex.what() << std::endl;
+    }
+    catch (...)
+    {
+        std::cout << "Unknown exception!!!" << std::endl;
     }
 
     return 0;

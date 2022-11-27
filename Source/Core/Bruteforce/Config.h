@@ -40,6 +40,7 @@ namespace Core::Bruteforce
         std::string alphabet;
         std::size_t passwordLength;
         std::size_t threadCount;
+        std::string pathToLogFile;
     };
 
     // TODO: It needs to add function for upload config from the config.json file

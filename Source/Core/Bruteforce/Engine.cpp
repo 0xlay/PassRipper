@@ -29,6 +29,8 @@
 
 #include <memory>
 #include <thread>
+#include <algorithm>
+#include <fstream>
 #include "Engine.h"
 #include "Core/Password/Generate.h"
 #include "Crypto/Cipher.h"
@@ -129,14 +131,16 @@ namespace Core::Bruteforce
 
         std::vector<std::string> passwords = Password::Generate(config);
 
-        for (auto&& password : passwords)
+        for (auto it = passwords.begin(); it != passwords.end(); ++it)
         {
             if (m_isFound)
             {
-                break;
+                savePasswords(passwords.begin(), it);
+                return;
             }
 
-            cipher.resetPassword(password);
+            cipher.resetPassword(*it);
+            
             std::string decryptedText;
             if (cipher.decrypt(m_encryptedText, decryptedText))
             {
@@ -144,15 +148,31 @@ namespace Core::Bruteforce
                 {
                     if (Utility::String::InsensetiveCompare(hash.toHexString(), m_hash))
                     {
-                        m_decryptedText = std::move(decryptedText);
-                        m_password = std::move(password);
                         m_isFound = true;
-                        break;
+                        savePasswords(passwords.begin(), it);
+                        m_decryptedText = std::move(decryptedText);
+                        m_password = *it;
+                        return;
                     }
                 }
             }
         }
+
+        savePasswords(passwords.begin(), passwords.end());
     }
 
+
+    void Engine::savePasswords(std::vector<std::string>::const_iterator begin, std::vector<std::string>::const_iterator end)
+    {
+        std::scoped_lock lock(m_lockerSaveToFile);
+        if (!m_config.pathToLogFile.empty())
+        {
+            std::ofstream file(m_config.pathToLogFile, std::ios::app);
+            if (file.is_open())
+            {
+                std::copy(std::move(begin), std::move(end), std::ostream_iterator<std::string>(file, "\n"));
+            }
+        }
+    }
 
 } // Core::Bruteforce
