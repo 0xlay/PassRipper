@@ -19,6 +19,8 @@ set(INCLUDE
     Source/Crypto/Hash/SHA256.h
     Source/Utility/String.h
     Source/Utility/String/Compare.h
+    Source/Utility/File.h
+    Source/Utility/File/InputOutput.h
 )
 
 set(SOURCE
@@ -30,6 +32,7 @@ set(SOURCE
     Source/Crypto/Hash.cpp
     Source/Crypto/Hash/SHA256.cpp
     Source/Utility/String/Compare.cpp
+    Source/Utility/File/InputOutput.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE} ${INCLUDE})
