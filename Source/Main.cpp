@@ -26,10 +26,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
+#include <fstream>
 #include "Core/Bruteforce.h"
 #include "Core/Password.h"
 #include "Crypto/Hash/Utility.h"
 #include "Utility/File.h"
+#include "Argument.h"
 
 
 int main(int argc, char** argv)
@@ -38,73 +40,67 @@ int main(int argc, char** argv)
     "Invalid arguments! Args: X:\\File.txt --alphabet=numerical/lowercase/uppercase/all --password-length=4 --threads=1"
     "[--log-password=X:\\Log.txt]";
 
-    if (argc < 5)
+    Core::Bruteforce::Config config;
+
+    if (argc > 4)
+    {
+        config.alphabet = ParseAlphabet(argv[2]);
+        if (config.alphabet.empty())
+        {
+            std::cout << kMessageInvalidArguments << std::endl;
+            return -1;
+        }
+
+        config.passwordLength = ParsePasswordLength(argv[3]);
+        if (!config.passwordLength)
+        {
+            std::cout << kMessageInvalidArguments << std::endl;
+            return -1;
+        }
+
+        config.threadCount = ParseNumberOfThreads(argv[4]);
+        if (!config.threadCount)
+        {
+            std::cout << kMessageInvalidArguments << std::endl;
+            return -1;
+        }
+
+        if (argc > 5)
+        {
+            config.pathToLogFile = ParsePathToPasswordLog(argv[5]);
+            if (config.pathToLogFile.empty())
+            {
+                std::cout << kMessageInvalidArguments << std::endl;
+                return -1;
+            }
+        }
+    }
+    else if(argc > 2)
+    {
+        std::ifstream configFile(argv[2]);
+        if (!configFile.is_open())
+        {
+            std::cout << kMessageInvalidArguments << std::endl;
+            return -1;
+        }
+        try
+        {
+            nlohmann::json data = nlohmann::json::parse(configFile);
+            config = Core::Bruteforce::ParseToConfig(data);
+        }
+        catch (nlohmann::json::exception const& ex)
+        {
+            std::cout << "Json exception: " << ex.what() << std::endl;
+            return -1;
+        }
+    }
+    else
     {
         std::cout << kMessageInvalidArguments << std::endl;
         return -1;
     }
 
     std::string fullPath = argv[1];
-
-    std::string alphabet;
-    if (std::strcmp(argv[2], "--alphabet=numerical") == 0)
-    {
-        alphabet = Core::Password::kNumericAlphabet;
-    }
-    else if (std::strcmp(argv[2], "--alphabet=lowercase") == 0)
-    {
-        alphabet = Core::Password::kLowerCaseAlphabet;
-    }
-    else if (std::strcmp(argv[2], "--alphabet=uppercase") == 0)
-    {
-        alphabet = Core::Password::kUpperCaseAlphabet;
-    }
-    else if(std::strcmp(argv[2], "--alphabet=all") == 0)
-    {
-        alphabet = Core::Password::kNumericAlphabet;
-        alphabet += Core::Password::kLowerCaseAlphabet;
-        alphabet += Core::Password::kUpperCaseAlphabet;
-    }
-    else
-    {
-        std::cout << kMessageInvalidArguments << std::endl;
-        return -1;
-
-    }
-
-    std::size_t passwordLength = 0;
-    static constexpr char kArgumentPasswordLength[] = "--password-length=";
-    if (std::strncmp(argv[3], kArgumentPasswordLength, sizeof(kArgumentPasswordLength) - 1) == 0)
-    {
-        passwordLength = std::stoll(std::string(argv[3] + sizeof(kArgumentPasswordLength) - 1));
-    }
-    else
-    {
-        std::cout << kMessageInvalidArguments << std::endl;
-        return -1;
-    }
-
-    std::size_t threads = 0;
-    static constexpr char kArgumentThreads[] = "--threads=";
-    if (std::strncmp(argv[4], kArgumentThreads, sizeof(kArgumentThreads) - 1) == 0)
-    {
-        threads = std::stoll(std::string(argv[4] + sizeof(kArgumentThreads) - 1));
-    }
-    else
-    {
-        std::cout << kMessageInvalidArguments << std::endl;
-        return -1;
-    }
-
-    std::string pathToLogFile;
-    static constexpr char kArgumentPathToLogFile[] = "--log-password=";
-    if (argc > 5)
-    {
-        if (std::strncmp(argv[5], kArgumentPathToLogFile, sizeof(kArgumentPathToLogFile) - 1) == 0)
-        {
-            pathToLogFile = std::string(argv[5] + sizeof(kArgumentPathToLogFile) - 1);
-        }
-    }
 
     std::string encryptedFile;
     if (!Utility::File::ReadData(fullPath, encryptedFile))
@@ -114,13 +110,6 @@ int main(int argc, char** argv)
     }
 
     std::string hash = Crypto::FetchHash(encryptedFile);
-
-    Core::Bruteforce::Config config {
-        .alphabet = std::move(alphabet),
-        .passwordLength = passwordLength,
-        .threadCount = threads,
-        .pathToLogFile = std::move(pathToLogFile)
-    };
 
     Core::Bruteforce::Engine engine(std::move(config));
     engine.setHash(std::move(hash));

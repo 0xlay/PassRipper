@@ -5,6 +5,7 @@ set(PROJECT_ROOT_SOURCE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 set(OpenSSL ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/OpenSSL/build)
 
 set(INCLUDE
+    Source/Argument.h
     Source/Core/Bruteforce.h
     Source/Core/Bruteforce/Config.h
     Source/Core/Bruteforce/Engine.h
@@ -26,7 +27,9 @@ set(INCLUDE
 )
 
 set(SOURCE
+    Source/Argument.cpp
     Source/Main.cpp
+    Source/Core/Bruteforce/Config.cpp
     Source/Core/Bruteforce/Engine.cpp
     Source/Core/Password/Generate.cpp
     Source/Crypto/Cipher.cpp

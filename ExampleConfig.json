@@ -1,0 +1,5 @@
+{
+  "alphabet": "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  "passwordLength": 4,
+  "threadCount": 4
+}
