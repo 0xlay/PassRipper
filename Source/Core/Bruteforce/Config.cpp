@@ -17,7 +17,7 @@
 // This source file is licensed under the terms of MIT license.
 // For details, please read the LICENSE file.
 //
-// File: Config.h
+// File: Config.cpp
 //
 // Creator: 0xlay (0xlay.lab@gmail.com)
 //
@@ -27,23 +27,35 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
-#include <cstdint>
-#include <string>
-#include <nlohmann/json.hpp>
+#include "Config.h"
 
 
 namespace Core::Bruteforce
 {
 
-    struct Config
+    Config ParseToConfig(nlohmann::json const& json)
     {
-        std::string alphabet;
-        std::size_t passwordLength;
-        std::size_t threadCount;
-        std::string pathToLogFile;
-    };
+        Config config{};
+        nlohmann::json::const_iterator  it{};
 
-    [[nodiscard]] Config ParseToConfig(nlohmann::json const& json);
+        if (it = json.find("alphabet"); it != json.end())
+        {
+            config.alphabet = it.value();
+        }
+        if (it = json.find("passwordLength"); it != json.end())
+        {
+            config.passwordLength = it.value();
+        }
+        if (it = json.find("threadCount"); it != json.end())
+        {
+            config.threadCount = it.value();
+        }
+        if (it = json.find("pathToLogFile"); it != json.end())
+        {
+            config.pathToLogFile = it.value();
+        }
+
+        return config;
+    }
 
 } // Core::Bruteforce
