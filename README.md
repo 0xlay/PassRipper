@@ -28,3 +28,8 @@ The PassRipper is a simple program for cracking password to file.</br>
      ```ms\do_ms``` </br>
      ```nmake -f ms\nt.mak``` </br>
      ```nmake -f ms\nt.mak install```
+
+# How to use
+```PassRipper.exe X:\\PathToEncryptionFile --alphabet=all --password-length=4 --threads=4``` </br>
+or </br>
+```PassRipper.exe X:\\PathToEncryptionFile `X:\\PathToConfig.json```
