@@ -19,12 +19,13 @@ set(INCLUDE
     Source/Crypto/Hash/SHA256.h
     Source/Utility/String.h
     Source/Utility/String/Compare.h
+    Source/Utility/String/Convert.h
     Source/Utility/File.h
     Source/Utility/File/InputOutput.h
 )
 
 set(SOURCE
-    Source/main.cpp
+    Source/Main.cpp
     Source/Core/Bruteforce/Engine.cpp
     Source/Core/Password/Generate.cpp
     Source/Crypto/Cipher.cpp
@@ -32,6 +33,7 @@ set(SOURCE
     Source/Crypto/Hash.cpp
     Source/Crypto/Hash/SHA256.cpp
     Source/Utility/String/Compare.cpp
+    Source/Utility/String/Convert.cpp
     Source/Utility/File/InputOutput.cpp
 )
 

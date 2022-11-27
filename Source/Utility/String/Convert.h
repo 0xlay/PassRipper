@@ -17,7 +17,7 @@
 // This source file is licensed under the terms of MIT license.
 // For details, please read the LICENSE file.
 //
-// File: String.h
+// File: Convert.h
 //
 // Creator: 0xlay (0xlay.lab@gmail.com)
 //
@@ -28,5 +28,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "String/Compare.h"
-#include "String/Convert.h"
+#include <string>
+#include <vector>
+
+
+namespace Utility::String
+{
+
+    [[nodiscard]] std::string ConvertToHexString(std::vector<std::uint8_t> const& data);
+
+} // Utility::String
